@@ -13,6 +13,18 @@ module.exports = {
     },
 
     async showbyType(req, res){
+        const {grupoID} = req.query
+
+        if(grupoID){
+            const returnShow = await ChecklistItemDefault.find({ type: req.params.type, grupoID: grupoID }).sort({ordemitem: 1});
+            return res.json(returnShow)
+        } else{
+            const returnShow = await ChecklistItemDefault.find({ type: req.params.type }).sort({ordemitem: 1});
+            return res.json(returnShow)
+        }
+    },
+
+    async showbyTypeAndGroup(req, res){
         const returnShow = await ChecklistItemDefault.find({ type: req.params.type }).sort({ordemitem: 1});
         return res.json(returnShow)
     },
@@ -27,15 +39,23 @@ module.exports = {
         return res.json(returnDel)
     },
 
-    store(req, res) {
+    async store(req, res) {
         const { type, ordemitem ,nomeitem } = req.body;
-        const returnPost = ChecklistItemDefault.create({
-            type, 
-            ordemitem,
-            nomeitem
-        });
 
-        return res.json(returnPost);
+        try {
+            
+            const returnPost = await ChecklistItemDefault.create({
+                type, 
+                ordemitem,
+                nomeitem,
+            });
+    
+            return res.json(returnPost);
+
+        } catch (error) {
+            return res.status(400).json(error)
+        }
+
     },
 
     async resetDefault(req, res) {

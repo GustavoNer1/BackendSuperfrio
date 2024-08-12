@@ -32,3 +32,13 @@ cron.schedule('* * * * *', function() {
 
 server.listen(porta);
 
+//s
+app.post('/grupos', async (req, res) => {
+  const { nome } = req.body;
+  const grupo = new Grupo({ nome });
+  await grupo.save();
+  res.status(201).send(grupo);
+});
+
+
+

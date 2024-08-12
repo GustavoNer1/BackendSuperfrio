@@ -30,6 +30,7 @@ const PDFGenerator = require('./controllers/PDFGenerator.js');
 const PDFGeneratorPit = require('./controllers/PDFGeneratorPit.js');
 const PDFGeneratorRack = require('./controllers/PDFGeneratorRack.js');
 const PDFGeneratorDespesa = require('./controllers/PDFGeneratorDespesa.js');
+const GruposController = require('./controllers/GruposController.js');
 
 const routes = express.Router();
 
@@ -250,5 +251,12 @@ routes.post('/forgotpwd', UsuarioController.forgotpwd);
 routes.post('/validacadastro', UsuarioController.validacadastro);
 routes.put('/usuarios/:id', UsuarioController.update);
 routes.delete('/usuarios/:id', UsuarioController.delete);
+
+routes.get('/grupos', GruposController.index);
+routes.get('/grupo/:id', GruposController.show);
+routes.post('/grupos', GruposController.store);
+routes.put('/grupo/adicionarItens/:id', GruposController.addNewItemsToGroup);
+routes.put('/grupo/removerItens/:id', GruposController.removeItemsOfGroup);
+routes.delete('/grupos/:id', GruposController.delete);
 
 module.exports = routes;

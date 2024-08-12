@@ -62,6 +62,10 @@ const ChecklistRackSchema = new Schema({
     obsgeral: {
         type: String,
         required: false
+    },
+    grupoID: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: true

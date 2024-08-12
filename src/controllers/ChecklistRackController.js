@@ -3,6 +3,7 @@ const ChecklistRackItem = require('../model/ChecklistRackItem');
 const ChecklistItemDefault = require('../model/ChecklistItemDefault');
 const Usuario = require('../model/Usuario');
 const nodemailer = require('nodemailer');
+const Grupos = require('../model/Grupos.js');
 const hbs = require('nodemailer-express-handlebars');
 const { Expo } = require('expo-server-sdk');
 
@@ -323,6 +324,7 @@ module.exports = {
 
         const RackItens = await ChecklistItemDefault.find({ type:'rack' }).sort({ordemitem: 1});
 
+
         const { 
             dataentrada,
             nos,
@@ -338,7 +340,8 @@ module.exports = {
             idusuario,
             nomeusuario,
             compressores,
-            obsgeral
+            obsgeral,
+            grupoID
          } = req.body;
 
         // não deixar duplicar mesmo controlID
@@ -358,20 +361,28 @@ module.exports = {
             idusuario,
             nomeusuario,
             compressores,
-            obsgeral
+            obsgeral,
+            grupoID
         });
 
-        const checklistdoc = await ChecklistRack.findOne({ nos });
+        const checklistdoc = await ChecklistRack.findOne({ nos }); //Pegando checklist criado
+        const grupo = await Grupos.findById(grupoID) //Localizando grupo do checklist
 
-        RackItens.forEach(async function(item){
+        if(!grupo){
+            return res.status(404).json("Grupo não encontrado")
+        }
+
+        const itensFiltrados = RackItens.filter(objeto => grupo.itensRack.includes(objeto._id));
+
+        itensFiltrados.map(async (item) => {
             await ChecklistRackItem.create({
                 ordemitem: item.ordemitem,
                 nomeitem: item.nomeitem,
                 idchecklistrack: checklistdoc._id
             });
-        });
+        })
 
-        return res.json(returnPost);
+        return res.status(200).json(returnPost);
     },
 
 };
