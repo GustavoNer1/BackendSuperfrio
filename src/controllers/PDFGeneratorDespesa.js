@@ -25,6 +25,7 @@ module.exports = {
                 console.log("Erro ao renderizar HTML: " + err);
                 return res.status(400).send({ error: "Erro ao gerar HTML" });
             } else {
+                process.env.OPENSSL_CONF = '/dev/null';
                 pdf.create(html, {
                                     format: "A4", 
                                     timeout: '500000',
